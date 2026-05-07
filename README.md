@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ✦ Taskflow — Animated Todo App
 
 > A playful, feature-rich Todo App built with pure **HTML + CSS + JavaScript**. No backend. No Firebase. No frameworks. Just open and go.
@@ -139,3 +140,7 @@ MIT — free to use, learn from, and build on.
 ---
 
 *Built with ✦ and zero dependencies.*
+=======
+# taskflow-3d-todo-app
+A modern interactive task management app with 3D effects, authentication, animations, dark mode, and task tracking features.
+>>>>>>> d8af441d8cc07b6e4d2e53cb5e05263d77a20c42
