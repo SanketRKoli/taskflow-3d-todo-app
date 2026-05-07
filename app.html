@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <!-- ═══════════════════════════════════════════
+       PRIMARY META
+  ═══════════════════════════════════════════ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Taskflow — Dashboard</title>
+  <meta name="description"        content="Your personal Taskflow dashboard. Add tasks, watch them explode, grow grass, and get things done." />
+  <meta name="keywords"           content="todo, tasks, dashboard, taskflow, productivity, bomb timer, grass animation" />
+  <meta name="author"             content="Taskflow" />
+  <meta name="robots"             content="noindex, nofollow" />
+  <meta name="theme-color"        content="#0d0d1a" />
+  <meta name="color-scheme"       content="dark light" />
+  <meta name="application-name"   content="Taskflow App" />
+
+  <!-- ═══════════════════════════════════════════
+       OPEN GRAPH
+  ═══════════════════════════════════════════ -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Taskflow Dashboard" />
+  <meta property="og:description" content="Your personal animated task manager." />
+  <meta property="og:site_name"   content="Taskflow" />
+
+  <!-- ═══════════════════════════════════════════
+       FAVICON
+  ═══════════════════════════════════════════ -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
+
+  <!-- ═══════════════════════════════════════════
+       FONTS
+  ═══════════════════════════════════════════ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+
+  <!-- particle canvas for bomb blast -->
+  <canvas id="blastCanvas"></canvas>
+
+  <!-- ambient blobs -->
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+
+  <div class="app-wrap">
+
+    <!-- ═══ TOPBAR ═══ -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="top-logo">✦ Taskflow</span>
+      </div>
+      <div class="topbar-center">
+        <div class="stat-pill"><span id="stTotal">0</span> Total</div>
+        <div class="stat-pill accent"><span id="stPending">0</span> Pending</div>
+        <div class="stat-pill green"><span id="stDone">0</span> Done</div>
+        <div class="stat-pill red"><span id="stHigh">0</span> High</div>
+      </div>
+      <div class="topbar-right">
+        <span class="greeting" id="greeting"></span>
+        <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+        <button class="logout-btn" onclick="logout()">Sign Out</button>
+      </div>
+    </header>
+
+    <!-- ═══ INPUT ZONE ═══ -->
+    <section class="input-zone">
+      <div class="input-main-row">
+        <input
+          type="text"
+          id="taskInput"
+          class="task-input"
+          placeholder="What needs to be done? Press Enter to add…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <kbd class="enter-badge">↵ Enter</kbd>
+      </div>
+      <div class="input-sub-row">
+        <select id="priSelect" class="sub-select">
+          <option value="normal">📌 Normal</option>
+          <option value="high">🔴 High Priority</option>
+          <option value="low">🟢 Low Priority</option>
+        </select>
+        <input type="date" id="dueInput" class="sub-date" title="Due date (optional)" />
+      </div>
+    </section>
+
+    <!-- ═══ FILTER BAR ═══ -->
+    <nav class="filter-nav">
+      <button class="f-btn active" data-f="all"     onclick="setFilter('all')">All</button>
+      <button class="f-btn"        data-f="pending" onclick="setFilter('pending')">Pending</button>
+      <button class="f-btn"        data-f="done"    onclick="setFilter('done')">Done</button>
+      <button class="f-btn red"    data-f="high"    onclick="setFilter('high')">🔴 High</button>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Search…" oninput="renderTasks()" />
+      </div>
+    </nav>
+
+    <!-- ═══ HINT ═══ -->
+    <p class="key-hint">
+      <kbd>Enter</kbd> add &nbsp;·&nbsp;
+      <kbd>✔</kbd> complete — grass grows 🌱 &nbsp;·&nbsp;
+      <kbd>✏️</kbd> edit &nbsp;·&nbsp;
+      <kbd>🗑</kbd> starts 5-sec bomb 💣 — tap bomb to cancel
+    </p>
+
+    <!-- ═══ TASK LIST ═══ -->
+    <div id="taskList"></div>
+
+  </div><!-- /app-wrap -->
+
+  <!-- ═══ GRASS TEMPLATE ═══ -->
+  <template id="grassTpl">
+    <div class="grass-overlay">
+      <div class="grass-scene">
+        <span class="g-sun">☀️</span>
+        <div class="g-ground">
+          <div class="g-blades">
+            <span class="blade bl1"></span>
+            <span class="blade bl2"></span>
+            <span class="blade bl3"></span>
+            <span class="blade bl4"></span>
+            <span class="blade bl5"></span>
+            <span class="blade bl6"></span>
+            <span class="blade bl7"></span>
+            <span class="blade bl8"></span>
+          </div>
+          <span class="g-flower gf1">🌸</span>
+          <span class="g-flower gf2">🌼</span>
+        </div>
+        <p class="g-label">Task Complete! 🎉</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- ═══ EDIT MODAL ═══ -->
+  <div class="modal-back hidden" id="editModal">
+    <div class="modal-box">
+      <h3 class="modal-title">✏️ Edit Task</h3>
+
+      <label class="modal-lbl">Task</label>
+      <input type="text" id="editText" class="modal-inp" placeholder="Task name" />
+
+      <label class="modal-lbl">Priority</label>
+      <select id="editPri" class="modal-inp">
+        <option value="normal">📌 Normal</option>
+        <option value="high">🔴 High</option>
+        <option value="low">🟢 Low</option>
+      </select>
+
+      <label class="modal-lbl">Due Date</label>
+      <input type="date" id="editDue" class="modal-inp" />
+
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+        <button class="modal-save"   onclick="saveEdit()">Save ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

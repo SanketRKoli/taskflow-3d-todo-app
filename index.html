@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ═══════════════════════════════════════════
+       PRIMARY META
+  ═══════════════════════════════════════════ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Taskflow — Your Playful Task Manager</title>
+  <meta name="description"        content="Taskflow is a fun, animated task manager. Sign up, log in, and manage your day with bomb countdowns, growing grass, and particle explosions." />
+  <meta name="keywords"           content="todo app, task manager, taskflow, productivity, animated tasks, fun todo" />
+  <meta name="author"             content="Taskflow" />
+  <meta name="robots"             content="index, follow" />
+  <meta name="theme-color"        content="#0d0d1a" />
+  <meta name="color-scheme"       content="dark" />
+  <meta name="application-name"   content="Taskflow" />
+  <meta name="generator"          content="Vanilla HTML/CSS/JS" />
+  <meta name="rating"             content="general" />
+  <meta name="language"           content="English" />
+
+  <!-- ═══════════════════════════════════════════
+       OPEN GRAPH (Facebook / LinkedIn)
+  ═══════════════════════════════════════════ -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Taskflow — Your Playful Task Manager" />
+  <meta property="og:description" content="Bomb countdowns, growing grass, particle explosions. The most fun way to manage your tasks." />
+  <meta property="og:url"         content="https://yourdomain.com/" />
+  <meta property="og:site_name"   content="Taskflow" />
+  <meta property="og:locale"      content="en_US" />
+
+  <!-- ═══════════════════════════════════════════
+       TWITTER CARD
+  ═══════════════════════════════════════════ -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Taskflow — Your Playful Task Manager" />
+  <meta name="twitter:description" content="Bomb countdowns, growing grass, particle explosions. The most fun way to manage your tasks." />
+  <meta name="twitter:creator"     content="@taskflow" />
+
+  <!-- ═══════════════════════════════════════════
+       FAVICONS
+  ═══════════════════════════════════════════ -->
+  <link rel="icon"             href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
+
+  <!-- ═══════════════════════════════════════════
+       FONTS
+  ═══════════════════════════════════════════ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+<body>
+
+  <!-- floating emoji particles in background -->
+  <div class="bg-particles" id="bgParticles"></div>
+
+  <!-- animated grid -->
+  <div class="grid-overlay"></div>
+
+  <!-- main card -->
+  <main class="auth-container">
+
+    <!-- left panel: branding -->
+    <section class="brand-panel">
+      <div class="brand-logo">
+        <span class="logo-star">✦</span>
+        <span class="logo-name">Taskflow</span>
+      </div>
+      <h1 class="brand-headline">
+        Tasks that<br/>
+        <span class="headline-pop">explode</span>,<br/>
+        <span class="headline-grow">grow</span> &amp;<br/>
+        <span class="headline-glow">get done.</span>
+      </h1>
+      <p class="brand-sub">The only todo app with a 💣 bomb timer,<br/>🌱 growing grass, and 💥 particle blasts.</p>
+
+      <!-- feature pills -->
+      <div class="feature-pills">
+        <span class="pill">💣 5-sec bomb delete</span>
+        <span class="pill">🌱 Grass grows on done</span>
+        <span class="pill">💥 Particle explosions</span>
+        <span class="pill">🌙 Dark / Light mode</span>
+        <span class="pill">✏️ Edit anytime</span>
+        <span class="pill">🔍 Live search</span>
+      </div>
+
+      <!-- floating demo cards -->
+      <div class="demo-cards">
+        <div class="demo-card dc1">
+          <span class="dc-dot" style="background:linear-gradient(135deg,#f472b6,#a78bfa)">1</span>
+          <span class="dc-text">Design landing page</span>
+          <span class="dc-badge high">🔴</span>
+        </div>
+        <div class="demo-card dc2 done-card">
+          <span class="dc-dot" style="background:linear-gradient(135deg,#34d399,#22c55e)">✓</span>
+          <span class="dc-text dc-done">Morning workout</span>
+          <span class="dc-grass">🌿</span>
+        </div>
+        <div class="demo-card dc3">
+          <span class="dc-dot" style="background:linear-gradient(135deg,#38bdf8,#6366f1)">3</span>
+          <span class="dc-text">Review pull requests</span>
+          <span class="dc-badge normal">📌</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- right panel: auth forms -->
+    <section class="auth-panel">
+
+      <!-- tab switcher -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabSignup" onclick="switchTab('signup')">
+          Sign Up
+        </button>
+        <button class="auth-tab" id="tabLogin" onclick="switchTab('login')">
+          Sign In
+        </button>
+        <div class="tab-slider" id="tabSlider"></div>
+      </div>
+
+      <!-- ── SIGNUP FORM ── -->
+      <form class="auth-form" id="formSignup" onsubmit="handleSignup(event)">
+        <div class="welcome-text">
+          <h2>Create your account</h2>
+          <p>Join the fun. No email needed.</p>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="su-name">Your Name</label>
+          <div class="field-wrap">
+            <span class="field-icon">👤</span>
+            <input
+              type="text"
+              id="su-name"
+              class="field-input"
+              placeholder="e.g. Alex Johnson"
+              autocomplete="name"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="su-user">Username</label>
+          <div class="field-wrap">
+            <span class="field-icon">@</span>
+            <input
+              type="text"
+              id="su-user"
+              class="field-input"
+              placeholder="e.g. alex123"
+              autocomplete="username"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="su-pass">Password</label>
+          <div class="field-wrap">
+            <span class="field-icon">🔑</span>
+            <input
+              type="password"
+              id="su-pass"
+              class="field-input"
+              placeholder="Min 4 characters"
+              autocomplete="new-password"
+              required
+            />
+            <button type="button" class="eye-btn" onclick="toggleEye('su-pass', this)">👁</button>
+          </div>
+          <!-- strength -->
+          <div class="strength-row">
+            <div class="strength-track"><div class="strength-bar" id="strengthBar"></div></div>
+            <span class="strength-txt" id="strengthTxt"></span>
+          </div>
+        </div>
+
+        <div id="su-msg" class="form-msg"></div>
+
+        <button type="submit" class="btn-auth" id="btnSignup">
+          <span class="btn-text">Create Account 🚀</span>
+          <span class="btn-ripple"></span>
+        </button>
+
+        <p class="switch-hint">Already have an account? <a href="#" onclick="switchTab('login')">Sign In</a></p>
+      </form>
+
+      <!-- ── LOGIN FORM ── -->
+      <form class="auth-form hidden" id="formLogin" onsubmit="handleLogin(event)">
+        <div class="welcome-text">
+          <h2>Welcome back!</h2>
+          <p>Your tasks are waiting for you.</p>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="li-user">Username</label>
+          <div class="field-wrap">
+            <span class="field-icon">@</span>
+            <input
+              type="text"
+              id="li-user"
+              class="field-input"
+              placeholder="Your username"
+              autocomplete="username"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="li-pass">Password</label>
+          <div class="field-wrap">
+            <span class="field-icon">🔑</span>
+            <input
+              type="password"
+              id="li-pass"
+              class="field-input"
+              placeholder="Your password"
+              autocomplete="current-password"
+              required
+            />
+            <button type="button" class="eye-btn" onclick="toggleEye('li-pass', this)">👁</button>
+          </div>
+        </div>
+
+        <div id="li-msg" class="form-msg"></div>
+
+        <button type="submit" class="btn-auth" id="btnLogin">
+          <span class="btn-text">Let's Go! ✦</span>
+          <span class="btn-ripple"></span>
+        </button>
+
+        <p class="switch-hint">No account yet? <a href="#" onclick="switchTab('signup')">Sign Up</a></p>
+      </form>
+
+    </section>
+  </main>
+
+  <script src="js/login.js"></script>
+</body>
+</html>
